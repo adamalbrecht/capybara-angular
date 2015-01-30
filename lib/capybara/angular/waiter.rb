@@ -38,8 +38,8 @@ module Capybara
       end
 
       def angular_app?
-        js = "(typeof angular !== 'undefined') && "
-        js += "angular.element(document.querySelector('[ng-app], [data-ng-app], .ng-scope')).length > 0"
+        js = "(typeof angular !== 'undefined') && " 
+        js += "angular.element(#{Capybara::Angular.app_exists_selector}).length > 0"
         page.evaluate_script js
 
       rescue Capybara::NotSupportedByDriverError
@@ -49,7 +49,7 @@ module Capybara
       def setup_ready
         page.execute_script <<-JS
           angular.element(document).ready(function() {
-            var app = angular.element(document.querySelector('[ng-app], [data-ng-app]'));
+            var app = angular.element(#{Capybara::Angular.app_selector});
             var injector = app.injector();
             injector.invoke(function($browser) {
               if ($browser.outstandingRequestCount > 0) {
